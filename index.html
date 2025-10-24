@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MALIK_QUEEN_HUB - Login</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --accent1: #00ffff;
+      --accent2: #ff00ff;
+      --accent3: #ff007f;
+      --text-light: #ffffff;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      background: linear-gradient(135deg, #0a001f, #33003d, #001f3d);
+      background-size: 400% 400%;
+      animation: gradientShift 8s infinite alternate;
+      color: var(--text-light);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #main-box {
+      background: rgba(255,255,255,0.08);
+      padding: 35px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+      width: 90%;
+      max-width: 420px;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+
+    #logo-container {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid var(--accent1);
+      margin: 0 auto 20px;
+      box-shadow: 0 0 40px var(--accent2), 0 0 60px var(--accent1);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 30px var(--accent1); }
+      100% { box-shadow: 0 0 60px var(--accent2); }
+    }
+
+    #logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-size: 2em;
+      text-shadow: 0 0 15px var(--accent1), 0 0 25px var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    input[type="password"] {
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      text-align: center;
+      font-size: 1.1em;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      letter-spacing: 2px;
+      box-shadow: 0 0 15px var(--accent1);
+    }
+
+    #login-btn {
+      background: linear-gradient(135deg, var(--accent2), var(--accent1));
+      font-weight: 700;
+      font-size: 1.1em;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #login-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--accent2), 0 0 35px var(--accent1);
+    }
+
+    #error-text {
+      color: #ff4d4d;
+      margin-top: 10px;
+      font-weight: 600;
+      display: none;
+      text-shadow: 0 0 10px red;
+    }
+
+    #toast {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: black;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 0 20px var(--accent2);
+      animation: fadeInOut 3s ease;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(20px); }
+      20%,80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(20px); }
+    }
+
+    .action-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      margin-top: 15px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .action-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 30px var(--accent1);
+    }
+
+    #video { background: linear-gradient(135deg, #ff007f, #ff9800); }
+    #sim { background: linear-gradient(135deg, #00c853, #b9f6ca); color: black; }
+    #image { background: linear-gradient(135deg, #3f51b5, #00bcd4); }
+
+    #telegram1, #telegram2 {
+      background: linear-gradient(135deg, #0088cc, #00c0ff);
+      display: inline-block;
+      margin-top: 12px;
+    }
+
+    footer {
+      margin-top: 25px;
+      font-weight: 600;
+      text-shadow: 0 0 15px var(--accent1);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px var(--accent1); }
+      100% { text-shadow: 0 0 25px var(--accent2); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-box">
+    <div id="logo-container">
+      <!-- 👇 Yahan image lagayi gayi hai -->
+      <img id="logo" src="https://i.ibb.co/F0PLfxN/skull-pic.jpg" alt="Logo" />
+    </div>
+
+    <h1>MALIK_QUEEN_HUB LOGIN</h1>
+
+    <input type="password" id="pass" placeholder="Enter Key 🔑">
+    <button id="login-btn" onclick="checkLogin()">LOGIN</button>
+    <div id="error-text">❌ Wrong Password! Try Again</div>
+
+    <a href="https://t.me/LegendUnknownHacker92" target="_blank" class="action-button" id="telegram1">📢 Join Telegram</a>
+    <a href="https://t.me/Netwarrior804" target="_blank" class="action-button" id="telegram2">📢 Join Telegram</a>
+
+    <div id="main-content" style="display:none;">
+      <a href="https://xmod.top/p/video-system" class="action-button" id="video">🎬 AI VIDEOS GENERATOR</a>
+      <a href="https://xmod.top/p/page1285" class="action-button" id="sim">📱 SIM DATABASE</a>
+      <a href="https://xmod.top/p/page1291" class="action-button" id="image">🧠 AI IMAGE GENERATOR</a>
+    </div>
+
+    <footer>POWERED BY MALIK 🔥</footer>
+  </div>
+
+  <div id="toast">WELCOME TO MALIK_QUEEN_HUB 👑</div>
+
+  <script>
+    function checkLogin() {
+      const pass = document.getElementById('pass').value.trim();
+      const errorText = document.getElementById('error-text');
+      const toast = document.getElementById('toast');
+
+      if (pass.toUpperCase() === "KING") {
+        errorText.style.display = 'none';
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+        document.getElementById('pass').style.display = 'none';
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('telegram1').style.display = 'none';
+        document.getElementById('telegram2').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.querySelector('h1').innerText = "MALIK_QUEEN_HUB";
+      } else {
+        errorText.style.display = 'block';
+      }
+    }
+  </script>
+
+<script type='text/javascript' src='//pl26635370.revenuecpmgate.com/0d/d6/68/0dd66892ae1350e1c2ac63bd9e54e111.js'></script></body>
+</html>

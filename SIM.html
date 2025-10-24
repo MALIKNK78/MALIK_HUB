@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIM Data Lookup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(270deg, #7f5af0, #2cb67d, #00c6ff, #ff5f6d);
+      background-size: 800% 800%;
+      animation: gradientShift 15s ease infinite;
+      font-family: sans-serif;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid #ff5f6d;
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-3xl bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-white/20 relative">
+    <h1 class="text-3xl text-white text-center font-bold mb-6">📱 MALIK_SIM_DATA-BASE</h1>
+
+    <div class="flex gap-3 mb-4">
+      <input id="phoneInput" type="text" placeholder="Enter phone number (03xxxxxxxxx)"
+        class="flex-1 px-4 py-3 rounded-lg border border-white/30 bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400">
+      <button id="searchBtn"
+        class="px-5 py-3 rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 hover:opacity-90 text-white font-semibold shadow-lg">
+        🔍 Search
+      </button>
+    </div>
+
+    <p id="phoneError" class="text-red-400 font-semibold mb-4 hidden text-center">⚠️ Please enter a phone number!</p>
+
+    <div id="loadingArea" class="hidden text-center mt-6 text-white text-xl font-bold">
+      <div class="spinner"></div>
+      <p>Searching...</p>
+    </div>
+
+    <div id="resultArea" class="space-y-4 mt-6"></div>
+  </div>
+
+  <script>
+    const searchBtn = document.getElementById("searchBtn");
+    const phoneInput = document.getElementById("phoneInput");
+    const phoneError = document.getElementById("phoneError");
+    const loadingArea = document.getElementById("loadingArea");
+    const resultArea = document.getElementById("resultArea");
+
+    searchBtn.addEventListener("click", async () => {
+      const phone = phoneInput.value.trim();
+      if (!phone) {
+        phoneError.classList.remove("hidden");
+        return;
+      }
+      phoneError.classList.add("hidden");
+      resultArea.innerHTML = "";
+      loadingArea.classList.remove("hidden");
+
+      let apiURL = "";
+      if (phone.startsWith("03")) {
+        apiURL = `https://legendxdata.site/Api/simdata.php?phone=92${phone.slice(1)}`;
+      } else if (phone.startsWith("7") || phone.startsWith("9")) {
+        apiURL = `https://legendxdata.site/ind.php?number=${phone}`;
+      } else {
+        resultArea.innerHTML = `<p class="text-yellow-300 font-semibold text-center">⚠️ Invalid number format</p>`;
+        loadingArea.classList.add("hidden");
+        return;
+      }
+
+      try {
+        const proxyURL = `https://api.allorigins.win/get?url=${encodeURIComponent(apiURL)}`;
+        const response = await fetch(proxyURL);
+        const proxyData = await response.json();
+        const data = JSON.parse(proxyData.contents);
+        loadingArea.classList.add("hidden");
+
+        if (data.records && data.records.length > 0) {
+          data.records.forEach(record => {
+            const card = document.createElement("div");
+            card.className = "p-6 rounded-xl shadow-2xl bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 text-white border border-white/20";
+            card.innerHTML = `
+              <p><strong>👤 Name:</strong> ${record.Name || "N/A"}</p>
+              <p><strong>📱 Mobile:</strong> ${record.Mobile || "N/A"}</p>
+              <p><strong>🌍 Country:</strong> ${record.Country || "N/A"}</p>
+              <p><strong>🆔 CNIC:</strong> ${record.CNIC || "N/A"}</p>
+              <p><strong>🏠 Address:</strong> ${record.Address || "N/A"}</p>
+              <button onclick="copyDetails(this)" class="mt-2 px-4 py-2 rounded-lg bg-black/40 hover:bg-black/60 text-white">📋 Copy</button>
+            `;
+            resultArea.appendChild(card);
+          });
+        } else {
+          resultArea.innerHTML = `<p class="text-red-300 font-semibold text-center">❌ No record found.</p>`;
+        }
+      } catch (error) {
+        console.error(error);
+        loadingArea.classList.add("hidden");
+        resultArea.innerHTML = `<p class="text-red-300 font-semibold text-center">⚠️ Error fetching data.</p>`;
+      }
+    });
+
+    function copyDetails(btn) {
+      const text = btn.parentElement.innerText;
+      navigator.clipboard.writeText(text);
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => btn.innerText = "📋 Copy", 2000);
+    }
+  </script>
+<script type='text/javascript' src='//pl26635370.revenuecpmgate.com/0d/d6/68/0dd66892ae1350e1c2ac63bd9e54e111.js'></script></body>
+</html>

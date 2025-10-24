@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>⚡ NetWarrior Studio — AI Image Generator ⚡</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712027.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent1:#00eaff;
+      --accent2:#ff007f;
+      --bg-dark:#0b0c1a;
+      --card-bg:rgba(255,255,255,0.05);
+      --muted:#bfc9d4;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{
+      background:linear-gradient(120deg,#0b0c1a,#12092a,#1b0b18);
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      padding:20px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+      max-width:520px;
+      background:rgba(255,255,255,0.03);
+      border-radius:999px;
+      padding:8px 14px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.36);
+      backdrop-filter:blur(6px);
+      margin-top:20px;
+    }
+    header img{ width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.2); }
+    header h1{
+      font-size:18px; font-weight:700; text-align:center; flex:1; margin:0 10px;
+      background:linear-gradient(90deg,#00eaff,#ff007f,#ffea00,#00eaff,#ff007f);
+      background-size:300% 100%; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      animation:gradientMove 4s linear infinite;
+    }
+    @keyframes gradientMove{0%{background-position:0% 0;}50%{background-position:100% 0;}100%{background-position:0% 0;}}
+    .card{
+      width:100%; max-width:520px; background:var(--card-bg); border-radius:16px; padding:24px; margin-top:30px;
+      border:1px solid rgba(255,255,255,0.12); box-shadow:0 0 30px rgba(0,234,255,0.12); backdrop-filter:blur(6px);
+    }
+    h2{ text-align:center; margin-bottom:14px; color:var(--accent1); }
+    input, textarea, select{
+      width:100%; padding:14px; border-radius:12px; border:none; background:rgba(255,255,255,0.07); color:white;
+      margin-bottom:12px; font-size:15px; outline:none;
+    }
+    select{ appearance:none; -webkit-appearance:none; -moz-appearance:none; }
+    .row{ display:flex; gap:10px; align-items:center; }
+    .row .small { flex:1; }
+    button{
+      width:100%; padding:14px; border:none; border-radius:12px;
+      background:linear-gradient(90deg,var(--accent2),var(--accent1));
+      color:white; font-weight:700; cursor:pointer; transition:0.18s; margin-bottom:12px;
+    }
+    button:hover{ transform:translateY(-3px); box-shadow:0 12px 30px rgba(0,0,0,0.25); }
+    #loader{ display:none; text-align:center; margin-top:12px; color:var(--muted); }
+    .loader{ border:5px solid rgba(255,255,255,0.06); border-top:5px solid var(--accent1); border-radius:50%; width:48px; height:48px; animation:spin 1s linear infinite; margin:8px auto; }
+    @keyframes spin{ 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
+    #result{ text-align:center; margin-top:18px; }
+    #result img{ max-width:100%; border-radius:12px; box-shadow:0 8px 40px rgba(0,234,255,0.12); }
+    .controls{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+    .download, .copy{ display:inline-block; padding:8px 12px; border-radius:10px; margin-top:8px; cursor:pointer; font-weight:700; text-decoration:none;}
+    .download{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#000; }
+    .copy{ background:rgba(255,255,255,0.06); color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
+    #message{ margin-top:14px; font-size:14px; color:#ff8a7a; text-align:center; }
+    footer{ margin-top:30px; text-align:center; font-size:13px; color:#aaa; }
+    .tg-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    .tg-btn{ flex:1; padding:12px; border-radius:12px; text-decoration:none; color:#fff; font-weight:700; text-align:center; }
+    .tg1{ background:linear-gradient(90deg,#00b4ff,#0088ff); }
+    .tg2{ background:linear-gradient(90deg,#7c5cff,#ff7ad1); }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="logo left">
+    <h1>⚡ NetWarrior Studio — AI Image Generator ⚡</h1>
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="logo right">
+  </header>
+
+  <section class="card">
+    <h2>🎨 Generate AI Image</h2>
+
+    <textarea id="prompt" rows="3" placeholder="Describe your image (e.g. neon cyberpunk city)">A cat riding a skateboard in space</textarea>
+
+    <div class="row">
+      <select id="size" class="small">
+        <option value="512x512">512 × 512</option>
+        <option value="768x768" selected>768 × 768</option>
+        <option value="1024x1024">1024 × 1024</option>
+      </select>
+    </div>
+
+    <button id="generateBtn">🖌️ Generate Image</button>
+
+    <div class="tg-row">
+      <a class="tg-btn tg1" href="https://t.me/Netwarrior804" target="_blank">📢 Join Telegram</a>
+      <a class="tg-btn tg2" href="https://t.me/LegendUnknownHacker92" target="_blank">📢 Join Telegram</a>
+    </div>
+
+    <div id="loader">
+      <div class="loader"></div>
+      <div style="margin-top:6px;color:var(--muted)">Generating image — trying proxies to bypass CORS...</div>
+    </div>
+
+    <div id="result"></div>
+    <div id="message"></div>
+  </section>
+
+  <footer>💫 Powered by <b>MALIK</b> — 2025</footer>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+    const message = document.getElementById('message');
+
+    const proxies = [
+      (url) => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
+      (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      (url) => `https://thingproxy.freeboard.io/fetch/${url}`
+    ];
+
+    const apiBase = (prompt, size) =>
+      `https://yabes-api.pages.dev/api/ai/image/imagen3-0?prompt=${encodeURIComponent(prompt)}&size=${encodeURIComponent(size)}`;
+
+    const showLoader = (on) => loader.style.display = on ? 'block' : 'none';
+    const showMessage = (msg) => message.innerText = msg || '';
+
+    async function tryFetchWithProxy(apiUrl) {
+      for (const proxy of proxies) {
+        const proxyUrl = proxy(apiUrl);
+        try {
+          const res = await fetch(proxyUrl);
+          if (!res.ok) continue;
+          const text = await res.text();
+
+          try {
+            const json = JSON.parse(text);
+            if (json.url) return { success: true, url: json.url };
+            if (json.data && json.data.url) return { success: true, url: json.data.url };
+          } catch {
+            const match = text.match(/https?:\/\/[^\s'"]+\.(png|jpe?g|webp|gif)/i);
+            if (match) return { success: true, url: match[0] };
+          }
+        } catch (e) {
+          console.warn('Proxy failed:', proxyUrl);
+        }
+      }
+      return { success: false };
+    }
+
+    generateBtn.addEventListener('click', async () => {
+      const prompt = document.getElementById('prompt').value.trim();
+      const size = document.getElementById('size').value;
+      if (!prompt) return showMessage('⚠️ Please enter a prompt.');
+
+      result.innerHTML = '';
+      showMessage('');
+      showLoader(true);
+
+      const apiUrl = apiBase(prompt, size);
+      const res = await tryFetchWithProxy(apiUrl);
+
+      showLoader(false);
+
+      if (res.success) {
+        const img = res.url;
+        result.innerHTML = `
+          <img src="${img}" alt="Generated Image">
+          <div class="controls">
+            <a class="download" href="${img}" download>⬇️ Download</a>
+            <button class="copy" id="copyBtn">📋 Copy URL</button>
+          </div>`;
+        document.getElementById('copyBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(img).then(() => {
+            showMessage('✅ Image URL copied!');
+          });
+        });
+      } else {
+        showMessage('❌ Failed to fetch image. Try again or check internet.');
+      }
+    });
+  </script>
+<script type='text/javascript' src='//pl26635370.revenuecpmgate.com/0d/d6/68/0dd66892ae1350e1c2ac63bd9e54e111.js'></script></body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MALIK 🚭 LEGEND YT DOWNLOADER</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      color: #58a6ff;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #21262d;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background: #0078ff;
+      color: white;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005fcc;
+    }
+    .result {
+      margin-top: 20px;
+      background: #1f242b;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+    a {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>MALIK 🚭 LEGEND<br>YT DOWNLOADER</h1>
+
+  <div class="container">
+    <input id="ytUrl" type="text" placeholder="🔗 Paste YouTube URL here..." />
+    <button onclick="download()">Get MP3</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    async function download() {
+      const url = document.getElementById("ytUrl").value.trim();
+      const resultDiv = document.getElementById("result");
+      if (!url) {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = "⚠️ Please enter a valid YouTube link!";
+        return;
+      }
+
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = "⏳ Processing... Please wait.";
+
+      try {
+        const api = `https://api.princetechn.com/api/download/ytmp3?apikey=prince&url=${encodeURIComponent(url)}`;
+        const res = await fetch(api);
+        const data = await res.json();
+
+        if (data.status === 200 && data.result && data.result.download_url) {
+          resultDiv.innerHTML = `
+            🎵 <b>Title:</b> ${data.result.title}<br><br>
+            <a href="${data.result.download_url}" target="_blank">⬇️ Download MP3</a>
+          `;
+        } else {
+          resultDiv.innerHTML = "❌ Error: Could not fetch download link.";
+        }
+      } catch (e) {
+        resultDiv.innerHTML = "⚠️ API Error: " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
